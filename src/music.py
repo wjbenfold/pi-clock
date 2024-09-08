@@ -3,7 +3,7 @@ import subprocess
 
 def shoop():
     omx_instructions = [
-        "aplay",
+        "mpg123",
         "/home/pi/Music/Shoop.mp3",
     ]
     print(" ".join(omx_instructions))
