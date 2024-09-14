@@ -2,13 +2,18 @@
 
 An alarm clock running on a raspberry pi zero.
 
+## Usage
+
+From base directory of repo:
+
+`python src/start.py`
+
 ## Features
 
-* ...
+* Play music at the alarm time
 
 ## To do
 
-* Play music at the alarm time
 * Spin a local http server to show alarm time
 * Permit alarm time changing from UI
 * Either

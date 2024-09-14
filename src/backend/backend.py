@@ -1,13 +1,12 @@
-from pathlib import Path
 import time
 
-from alarm_time import get_alarm_times
-from local_types import Time
-from music import shoop
+from backend.alarm_time import get_alarm_times
+from backend.local_types import Time
+from backend.music import shoop
 
 
 def main():
-    while not Path("exit.flg").is_file():
+    while True:
         time.sleep(5)
 
         now_time = time.localtime()
@@ -19,6 +18,3 @@ def main():
                 print("Alarm fired")
                 shoop()
                 time.sleep(60)
-
-
-main()
