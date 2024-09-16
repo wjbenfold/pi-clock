@@ -12,6 +12,8 @@ From base directory of repo:
 
 * Play music at the alarm time
 * JSON config with preset config options and daily schedule
+* `running.flg` present when service is running
+* `exit.flg` will stop the service
 
 ## To do
 
