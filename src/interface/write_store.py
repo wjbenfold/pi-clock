@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Tuple
 from local_types import Config, Configs, Schedule, Schedules, JsonStore
 
-filepath = Path("alarm_time.conf")
+filepath = Path("src/alarm_time.conf")
 
 
 def makeJson(configs: Dict[str, Config], schedules: Schedules) -> JsonStore:
@@ -24,7 +24,11 @@ def validateJson(jsonObject: JsonStore) -> None:
         len(jsonObject["schedules"]) == 7
     )  # Technically rendered unnecessary by Schedules definition
     for configName in jsonObject["schedules"]:
-        assert configName in jsonObject["configs"].keys()
+        try:
+            assert configName in jsonObject["configs"].keys() or configName is None
+        except AssertionError:
+            print(configName)
+            raise
 
 
 def readJson(jsonObject: JsonStore) -> Tuple[Configs, Schedules]:
