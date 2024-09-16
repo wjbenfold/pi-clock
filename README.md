@@ -11,6 +11,7 @@ From base directory of repo:
 ## Features
 
 * Play music at the alarm time
+* JSON config with preset config options and daily schedule
 
 ## To do
 
