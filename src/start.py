@@ -5,7 +5,16 @@ from time import sleep
 
 from backend import backend
 from frontend import frontend
+from interface import bootstrap_config
 
+if len(sys.argv) > 1:
+    match sys.argv[1]:
+        case "--generate-config":
+            bootstrap_config.main()
+            sys.exit(0)
+        case _:
+            print("Invalid option")
+            sys.exit(-1)
 
 running_flag = Path("running.flg")
 exit_flag = Path("exit.flg")
