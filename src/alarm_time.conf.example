@@ -1,0 +1,25 @@
+{
+    "configs": {
+        "standard_weekday": {
+            "hour": 7,
+            "minute": 0
+        },
+        "bristol_weekday": {
+            "hour": 6,
+            "minute": 50
+        },
+        "standard_weekend": {
+            "hour": 9,
+            "minute": 0
+        }
+    },
+    "schedules": [
+        "standard_weekday",
+        "standard_weekday",
+        "standard_weekday",
+        "standard_weekday",
+        "standard_weekday",
+        null,
+        null
+    ]
+}
