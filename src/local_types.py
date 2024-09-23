@@ -1,4 +1,4 @@
-from typing import Dict, Iterator, List, NamedTuple, TypedDict
+from typing import Dict, List, NamedTuple, TypedDict
 
 
 class Time(NamedTuple):

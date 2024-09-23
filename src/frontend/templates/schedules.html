@@ -1,0 +1,14 @@
+<h1>Schedules</h1>
+<a href="/" class="button">Root</a>
+<a href="/configs" class="button">Configs</a>
+
+<ul>
+    {% for day, schedule in schedules._asdict().items() %}
+    {% if schedule != None %}
+    <li>{{ day }}: {{ schedule.configName }} ({{ "%02d"|format(configs[schedule.configName].hour) }}:{{
+        "%02d"|format(configs[schedule.configName].minute) }})</li>
+    {% else %}
+    <li>{{ day }}: {{ schedule.config }} None</li>
+    {% endif %}
+    {% endfor %}
+</ul>

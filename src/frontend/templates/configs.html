@@ -1,0 +1,9 @@
+<h1>Configs</h1>
+<a href="/" class="button">Root</a>
+<a href="/schedules" class="button">Schedules</a>
+
+<ul>
+    {% for name, config in configs.items() %}
+    <li>{{ name }} {{ "%02d"|format(config.hour) }}:{{ "%02d"|format(config.minute) }}</li>
+    {% endfor %}
+</ul>

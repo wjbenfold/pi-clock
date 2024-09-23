@@ -57,3 +57,7 @@ def loadStore() -> Tuple[Configs, Schedules]:
         jsonObject = json.load(ff)
     validateJson(jsonObject)
     return readJson(jsonObject)
+
+
+def loadJsonStore() -> JsonStore:
+    return makeJson(*loadStore())
