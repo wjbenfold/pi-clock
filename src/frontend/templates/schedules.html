@@ -1,14 +1,33 @@
-<h1>Schedules</h1>
-<a href="/" class="button">Root</a>
-<a href="/configs" class="button">Configs</a>
+<!DOCTYPE html>
+<html lang="en">
 
-<ul>
-    {% for day, schedule in schedules._asdict().items() %}
-    {% if schedule != None %}
-    <li>{{ day }}: {{ schedule.configName }} ({{ "%02d"|format(configs[schedule.configName].hour) }}:{{
-        "%02d"|format(configs[schedule.configName].minute) }})</li>
-    {% else %}
-    <li>{{ day }}: {{ schedule.config }} None</li>
-    {% endif %}
-    {% endfor %}
-</ul>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedules</title>
+</head>
+
+<body>
+    <h1>Schedules</h1>
+    <a href="/" class="button">Root</a>
+    <a href="/configs" class="button">Configs</a>
+
+    <form action="/schedules" method="POST">
+        {% for day in ['mon', 'tues', 'weds', 'thurs', 'fri', 'sat', 'sun'] %}
+        <div>
+            <label for="{{ day }}">{{ day|capitalize }}:</label>
+            <select name="{{ day }}" id="{{ day }}">
+                {% for option in config_list %}
+                <option value="{{ option }}" {% if option==schedules._asdict()[day].configName %}selected{% endif %}>
+                    {{ option }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endfor %}
+        <br>
+        <input type="submit" value="Update Schedule">
+    </form>
+</body>
+
+</html>

@@ -48,12 +48,12 @@ def readJson(jsonObject: JsonStore) -> Tuple[Configs, Schedules]:
 def dumpStore(configs: Configs, schedules: Schedules) -> None:
     jsonObject = makeJson(configs, schedules)
     validateJson(jsonObject)
-    with open(filepath) as ff:
-        json.dump(jsonObject, ff)
+    with open(filepath, "w+") as ff:
+        json.dump(jsonObject, ff, indent=2)
 
 
 def loadStore() -> Tuple[Configs, Schedules]:
-    with open(filepath) as ff:
+    with open(filepath, "r") as ff:
         jsonObject = json.load(ff)
     validateJson(jsonObject)
     return readJson(jsonObject)

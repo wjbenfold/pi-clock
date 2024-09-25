@@ -1,9 +1,37 @@
-<h1>Configs</h1>
-<a href="/" class="button">Root</a>
-<a href="/schedules" class="button">Schedules</a>
+<!DOCTYPE html>
+<html lang="en">
 
-<ul>
-    {% for name, config in configs.items() %}
-    <li>{{ name }} {{ "%02d"|format(config.hour) }}:{{ "%02d"|format(config.minute) }}</li>
-    {% endfor %}
-</ul>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configs</title>
+</head>
+
+<body>
+    <h1>Configs</h1>
+    <a href="/" class="button">Root</a>
+    <a href="/schedules" class="button">Schedules</a>
+
+    <ul>
+        {% for name, config in configs.items() %}
+        <li>{{ name }} {{ "%02d"|format(config.hour) }}:{{ "%02d"|format(config.minute) }}</li>
+        {% endfor %}
+    </ul>
+
+
+    <h1>New config</h1>
+    <form action="/configs" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="hours">Hours:</label>
+        <input type="number" id="hours" name="hours" min="3" max="23" required><br><br>
+
+        <label for="minutes">Minutes:</label>
+        <input type="number" id="minutes" name="minutes" min="0" max="59" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+
+</html>

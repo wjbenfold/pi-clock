@@ -8,17 +8,21 @@ From base directory of repo:
 
 `python src/start.py`
 
+### Dependencies
+
+* `flask`
+
 ## Features
 
 * Play music at the alarm time
 * JSON config with preset config options and daily schedule
 * `running.flg` present when service is running
 * `exit.flg` will stop the service
+* Local http server to show alarm time
+* Alarm time changing from UI (make new configs, choose config used by schedule)
 
 ## To do
 
-* Spin a local http server to show alarm time
-* Permit alarm time changing from UI
 * Either
     * Notify user of alarm time
     * Remotely unset the alarm
