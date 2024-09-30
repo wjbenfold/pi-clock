@@ -8,6 +8,11 @@ From base directory of repo:
 
 `python src/start.py`
 
+Arguments
+
+`--generate-config`: Make a basic config file then exit
+`--ignore-running`: Ignore the presence of `running.flg`
+
 ### Dependencies
 
 * `flask`

@@ -1,24 +1,27 @@
 {
     "configs": {
-        "standard_weekday": {
+        "4405f14d-ed20-4e80-b7c8-28c81e097335": {
+            "name": "Standard weekday",
             "hour": 7,
             "minute": 0
         },
-        "bristol_weekday": {
+        "4c605406-9ed2-401f-841c-cb3b172e6a37": {
+            "name": "Bristol weekday",
             "hour": 6,
             "minute": 50
         },
-        "standard_weekend": {
+        "b3f79cb0-996b-465c-b096-3158bdf419c0": {
+            "name": "Standard weekend",
             "hour": 9,
             "minute": 0
         }
     },
     "schedules": [
-        "standard_weekday",
-        "standard_weekday",
-        "standard_weekday",
-        "standard_weekday",
-        "standard_weekday",
+        "4405f14d-ed20-4e80-b7c8-28c81e097335",
+        "4405f14d-ed20-4e80-b7c8-28c81e097335",
+        "4405f14d-ed20-4e80-b7c8-28c81e097335",
+        "4405f14d-ed20-4e80-b7c8-28c81e097335",
+        "4405f14d-ed20-4e80-b7c8-28c81e097335",
         null,
         null
     ]

@@ -1,19 +1,21 @@
 import json
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Tuple
+from uuid import UUID
 from local_types import Config, Configs, Schedule, Schedules, JsonStore
 
 filepath = Path("src/alarm_time.conf")
 
 
-def makeJson(configs: Dict[str, Config], schedules: Schedules) -> JsonStore:
+def makeJson(configs: Configs, schedules: Schedules) -> JsonStore:
     jsonObject: JsonStore = {
         "configs": {
-            key: {"hour": val.hour, "minute": val.minute}
+            str(key): {"name": val.name, "hour": val.hour, "minute": val.minute}
             for key, val in configs.items()
         },
         "schedules": [
-            schedule.configName if schedule != None else None for schedule in schedules
+            str(schedule.configId) if schedule != None else None
+            for schedule in schedules
         ],
     }
     return jsonObject
@@ -23,23 +25,23 @@ def validateJson(jsonObject: JsonStore) -> None:
     assert (
         len(jsonObject["schedules"]) == 7
     )  # Technically rendered unnecessary by Schedules definition
-    for configName in jsonObject["schedules"]:
+    for configId in jsonObject["schedules"]:
         try:
-            assert configName in jsonObject["configs"].keys() or configName is None
+            assert configId in jsonObject["configs"].keys() or configId is None
         except AssertionError:
-            print(configName)
+            print(configId)
             raise
 
 
 def readJson(jsonObject: JsonStore) -> Tuple[Configs, Schedules]:
     configs = {
-        key: Config(val["hour"], val["minute"])
+        UUID(key): Config(val["name"], val["hour"], val["minute"])
         for key, val in jsonObject["configs"].items()
     }
     schedules = Schedules(
         *[
-            Schedule(configName) if configName != None else None
-            for configName in jsonObject["schedules"]
+            Schedule(UUID(configId)) if configId != None else None
+            for configId in jsonObject["schedules"]
         ]
     )
     return configs, schedules

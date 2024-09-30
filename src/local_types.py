@@ -1,4 +1,5 @@
 from typing import Dict, List, NamedTuple, TypedDict
+from uuid import UUID
 
 
 class Time(NamedTuple):
@@ -10,15 +11,16 @@ OptionalTime = Time | None
 
 
 class Config(NamedTuple):
+    name: str
     hour: int
     minute: int
 
 
-Configs = Dict[str, Config]
+Configs = Dict[UUID, Config]
 
 
 class Schedule(NamedTuple):
-    configName: str
+    configId: UUID
 
 
 OptionalSchedule = Schedule | None
@@ -35,6 +37,7 @@ class Schedules(NamedTuple):
 
 
 class JsonConfig(TypedDict):
+    name: str
     hour: int
     minute: int
 

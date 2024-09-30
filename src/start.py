@@ -7,11 +7,15 @@ from backend import backend
 from frontend import frontend
 from interface import bootstrap_config
 
+ignore_running = False
+
 if len(sys.argv) > 1:
     match sys.argv[1]:
         case "--generate-config":
             bootstrap_config.main()
             sys.exit(0)
+        case "--ignore-running":
+            ignore_running = True
         case _:
             print("Invalid option")
             sys.exit(-1)
@@ -24,6 +28,8 @@ if exit_flag.is_file():
 
 if not running_flag.is_file():
     running_flag.touch()
+elif ignore_running:
+    pass
 else:
     print("Already running")
     sys.exit(-1)

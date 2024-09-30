@@ -17,9 +17,10 @@
         <div>
             <label for="{{ day }}">{{ day|capitalize }}:</label>
             <select name="{{ day }}" id="{{ day }}">
-                {% for option in config_list %}
-                <option value="{{ option }}" {% if option==schedules._asdict()[day].configName %}selected{% endif %}>
-                    {{ option }}
+                {% for config_id, config_name in configs.items() %}
+                <option value="{{ config_id }}" {% if config_id==schedules._asdict()[day].configId %}selected{% endif
+                    %}>
+                    {{ config_name }}
                 </option>
                 {% endfor %}
             </select>

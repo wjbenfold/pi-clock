@@ -1,9 +1,12 @@
 import json
 from typing import Dict, List
+from uuid import UUID, uuid4
 from flask import abort, Flask, render_template, redirect, url_for, request
 
 from interface.write_store import dumpStore, loadStore
 from local_types import Config, Configs, Schedule, Schedules
+
+NONE_ID = UUID("937defb6-837e-4cf0-a250-08ec57e682ee")
 
 app = Flask(__name__)
 
@@ -35,8 +38,8 @@ def handle_configs_post():
     minutes = request.form.get("minutes")
     if name == None or hours == None or minutes == None:
         abort(400)
-    new_config = Config(int(hours), int(minutes))
-    configs[name] = new_config
+    new_config = Config(name, int(hours), int(minutes))
+    configs[uuid4()] = new_config
     dumpStore(configs=configs, schedules=schedules)
     return redirect("/configs")
 
@@ -55,19 +58,19 @@ def handle_schedules_get():
     configs, schedules = loadStore()
     return render_template(
         "schedules.html",
-        config_list=get_jinja_config_list(configs),
-        schedules=get_jinja_schedule_list(schedules),
+        configs=get_jinja_configs(configs),
+        schedules=get_jinja_schedules(schedules),
     )
 
 
-def get_jinja_config_list(configs: Configs) -> List[str]:
-    return ["None"] + list(configs.keys())
+def get_jinja_configs(configs: Configs) -> Dict[UUID, str]:
+    return {key: conf.name for key, conf in configs.items()} | {NONE_ID: "None"}
 
 
-def get_jinja_schedule_list(schedules: Schedules) -> Schedules:
+def get_jinja_schedules(schedules: Schedules) -> Schedules:
     return Schedules(
         *[
-            Schedule(x.configName) if x is not None else Schedule("None")
+            Schedule(x.configId) if x is not None else Schedule(NONE_ID)
             for x in schedules
         ]
     )
@@ -89,7 +92,9 @@ def handle_schedules_post():
     else:
         new_schedules = Schedules(
             *[
-                Schedule(result) if result != "None" and result is not None else None
+                Schedule(UUID(result))
+                if result != str(NONE_ID) and result is not None
+                else None
                 for result in results
             ]
         )

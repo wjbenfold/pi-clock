@@ -10,7 +10,7 @@ def get_alarm_time(day: int) -> OptionalTime:
     configs, schedules = loadStore()
     today_schedule = schedules[day]
     schedule_config = (
-        configs[today_schedule.configName] if today_schedule != None else None
+        configs[today_schedule.configId] if today_schedule != None else None
     )
     return (
         Time(schedule_config.minute, schedule_config.hour)
