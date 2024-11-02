@@ -1,7 +1,12 @@
 import datetime
 from typing import List, Tuple
 from interface.handle_disk import dumpStore, loadStore
-from local_types import Configs, DateSchedule, OptionalConfigChoice
+from local_types import (
+    Configs,
+    DateSchedule,
+    DateSchedule,
+    OptionalConfigChoice,
+)
 
 
 def getCurrentTruths(days: List[datetime.date]) -> Tuple[DateSchedule, bool]:

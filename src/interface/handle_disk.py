@@ -33,6 +33,8 @@ def makeJson(
         ],
         "overrides": {
             str(date.toordinal()): str(schedule.configId)
+            if schedule is not None
+            else None
             for date, schedule in overrides.items()
         },
         "active": active,
@@ -70,8 +72,10 @@ def readJson(jsonObject: JsonStore) -> FullInfo:
         ]
     )
     overrides = {
-        date.fromordinal(int(dateOrdinal)): ConfigChoice(UUID(configId))
-        for dateOrdinal, configId in jsonObject["overrides"].values()
+        date.fromordinal(int(dateOrdinal)): (
+            ConfigChoice(UUID(configId)) if configId != None else None
+        )
+        for dateOrdinal, configId in jsonObject["overrides"].items()
     }
 
     active = jsonObject["active"]

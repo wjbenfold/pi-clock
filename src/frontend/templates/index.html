@@ -1,5 +1,37 @@
-<h1>Schedule</h1>
-<a href="/configs" class="button">Configs</a>
-<a href="/schedules" class="button">Default schedules</a>
+<!DOCTYPE html>
+<html lang="en">
 
-<!-- TODO - add a form for updating the current plan -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule</title>
+</head>
+
+<body>
+    <h1>Schedule</h1>
+    <a href="/configs" class="button">Configs</a>
+    <a href="/schedules" class="button">Default Schedules</a>
+
+    <form action="/overrides" method="POST">
+        {% for day in days %}
+        <div>
+            <label for="{{ day }}">{{ day_names[day] }}:</label>
+            <select name="{{ day }}" id="{{ day }}">
+                {% for config_id, config_name in configs.items() %}
+                <option value="{{ config_id }}" {% if config_id==current_truths[day].configId %}selected{% endif %}>
+                    {{ config_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endfor %}
+        <div>
+            <label for="active-checkbox">Active:</label>
+            <input type="checkbox" id="active-checkbox" name="active" {% if active %}checked{% endif %}>
+        </div>
+        <br>
+        <input type="submit" value="Update Schedule">
+    </form>
+</body>
+
+</html>

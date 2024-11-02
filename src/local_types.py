@@ -1,5 +1,5 @@
 import datetime
-from typing import Dict, List, NamedTuple, TypedDict
+from typing import Dict, List, NamedTuple, TypeVar, TypedDict
 from uuid import UUID
 
 
@@ -37,7 +37,7 @@ class WeekSchedule(NamedTuple):
     sun: OptionalConfigChoice
 
 
-DateSchedule = Dict[datetime.date, ConfigChoice]
+DateSchedule = Dict[datetime.date, OptionalConfigChoice]
 
 
 class FullInfo(NamedTuple):
@@ -61,5 +61,5 @@ JsonSchedule = str
 class JsonStore(TypedDict):
     configs: Dict[str, JsonConfig]
     defaultSchedule: List[JsonSchedule | None]
-    overrides: Dict[JsonDate, JsonSchedule]
+    overrides: Dict[JsonDate, JsonSchedule | None]
     active: bool

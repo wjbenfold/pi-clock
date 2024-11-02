@@ -1,19 +1,34 @@
+import datetime
 import json
 from typing import Dict, List
 from uuid import UUID, uuid4
 from flask import abort, Flask, render_template, redirect, url_for, request
 
-from interface.write_store import dumpStore, loadStore
-from local_types import Config, Configs, ConfigChoice, WeekSchedule
+from interface.handle_disk import dumpStore, loadStore
+from interface.repository import getConfigs, getCurrentTruths, setOverrides
+from local_types import (
+    Config,
+    Configs,
+    ConfigChoice,
+    DateSchedule,
+    DateSchedule,
+    WeekSchedule,
+)
 
 NONE_ID = UUID("937defb6-837e-4cf0-a250-08ec57e682ee")
 
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def root():
-    return render_template("index.html")
+    return handle_root_get()
+
+
+@app.route("/overrides", methods=["POST"])
+def overrides():
+    handle_overrides_post()
+    return redirect("/")
 
 
 @app.route("/configs", methods=["GET", "POST"])
@@ -110,6 +125,54 @@ def handle_schedules_post():
             active=current_store.active,
         )
     return redirect("/schedules")
+
+
+def get_override_dates() -> List[datetime.date]:
+    today = datetime.date.today()
+    return [today + datetime.timedelta(days=ii) for ii in range(7)]
+
+
+day_naming = ["Mon", "Tues", "Weds", "Thurs", "Fri", "Sat", "Sun"]
+
+
+def handle_root_get():
+    days = get_override_dates()
+    schedule, active = getCurrentTruths(days)
+    day_names = {day: day_naming[day.weekday()] for day in days[1:]}
+    day_names[days[0]] = f"{day_naming[days[0].weekday()]} (today)"
+    return render_template(
+        "index.html",
+        configs=get_jinja_configs(getConfigs()),
+        current_truths=get_jinja_current_truths(schedule),
+        active=active,
+        days=days,
+        day_names=day_names,
+    )
+
+
+def get_jinja_current_truths(schedule: DateSchedule) -> DateSchedule:
+    jinja_schedule = {}
+    for day in schedule.keys():
+        config_choice = schedule[day]
+        if config_choice is not None:
+            jinja_schedule[day] = config_choice
+        else:
+            jinja_schedule[day] = ConfigChoice(NONE_ID)
+    return jinja_schedule
+
+
+def handle_overrides_post():
+    days = get_override_dates()
+    overrides: DateSchedule = {}
+    for day in days:
+        result = request.form.get(str(day))
+        overrides[day] = (
+            ConfigChoice(UUID(result))
+            if result != str(NONE_ID) and result is not None
+            else None
+        )
+    is_active = "active" in request.form
+    setOverrides(overrides, is_active)
 
 
 def main():
