@@ -1,3 +1,4 @@
+from datetime import date
 import time
 
 from backend.alarm_time import get_alarm_time
@@ -11,8 +12,7 @@ def main():
 
         now_time = time.localtime()
         now = Time(now_time.tm_min, now_time.tm_hour)
-        today = now_time.tm_wday
-        print(today, now)
+        today = date.today()
 
         if now == get_alarm_time(today):
             print("Alarm fired")

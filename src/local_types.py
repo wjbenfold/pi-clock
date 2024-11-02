@@ -1,3 +1,4 @@
+import datetime
 from typing import Dict, List, NamedTuple, TypedDict
 from uuid import UUID
 
@@ -19,21 +20,31 @@ class Config(NamedTuple):
 Configs = Dict[UUID, Config]
 
 
-class Schedule(NamedTuple):
+class ConfigChoice(NamedTuple):
     configId: UUID
 
 
-OptionalSchedule = Schedule | None
+OptionalConfigChoice = ConfigChoice | None
 
 
-class Schedules(NamedTuple):
-    mon: OptionalSchedule
-    tues: OptionalSchedule
-    weds: OptionalSchedule
-    thurs: OptionalSchedule
-    fri: OptionalSchedule
-    sat: OptionalSchedule
-    sun: OptionalSchedule
+class WeekSchedule(NamedTuple):
+    mon: OptionalConfigChoice
+    tues: OptionalConfigChoice
+    weds: OptionalConfigChoice
+    thurs: OptionalConfigChoice
+    fri: OptionalConfigChoice
+    sat: OptionalConfigChoice
+    sun: OptionalConfigChoice
+
+
+DateSchedule = Dict[datetime.date, ConfigChoice]
+
+
+class FullInfo(NamedTuple):
+    configs: Configs
+    defaultSchedule: WeekSchedule
+    overrides: DateSchedule
+    active: bool
 
 
 class JsonConfig(TypedDict):
@@ -42,9 +53,13 @@ class JsonConfig(TypedDict):
     minute: int
 
 
+JsonDate = str  # I believe you can't use an int as the key in json
+
 JsonSchedule = str
 
 
 class JsonStore(TypedDict):
     configs: Dict[str, JsonConfig]
-    schedules: List[JsonSchedule | None]
+    defaultSchedule: List[JsonSchedule | None]
+    overrides: Dict[JsonDate, JsonSchedule]
+    active: bool

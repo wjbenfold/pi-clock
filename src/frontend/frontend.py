@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 from flask import abort, Flask, render_template, redirect, url_for, request
 
 from interface.write_store import dumpStore, loadStore
-from local_types import Config, Configs, Schedule, Schedules
+from local_types import Config, Configs, ConfigChoice, WeekSchedule
 
 NONE_ID = UUID("937defb6-837e-4cf0-a250-08ec57e682ee")
 
@@ -27,20 +27,25 @@ def post_configs():
 
 
 def handle_configs_get():
-    configs, _ = loadStore()
+    configs = loadStore().configs
     return render_template("configs.html", configs=configs)
 
 
 def handle_configs_post():
-    configs, schedules = loadStore()
+    current_store = loadStore()
     name = request.form.get("name")
     hours = request.form.get("hours")
     minutes = request.form.get("minutes")
     if name == None or hours == None or minutes == None:
         abort(400)
     new_config = Config(name, int(hours), int(minutes))
-    configs[uuid4()] = new_config
-    dumpStore(configs=configs, schedules=schedules)
+    current_store.configs[uuid4()] = new_config
+    dumpStore(
+        configs=current_store.configs,
+        defaultSchedule=current_store.defaultSchedule,
+        overrides=current_store.overrides,
+        active=current_store.active,
+    )
     return redirect("/configs")
 
 
@@ -55,11 +60,11 @@ def post_schedules():
 
 
 def handle_schedules_get():
-    configs, schedules = loadStore()
+    current_store = loadStore()
     return render_template(
         "schedules.html",
-        configs=get_jinja_configs(configs),
-        schedules=get_jinja_schedules(schedules),
+        configs=get_jinja_configs(current_store.configs),
+        schedules=get_jinja_schedules(current_store.defaultSchedule),
     )
 
 
@@ -67,17 +72,17 @@ def get_jinja_configs(configs: Configs) -> Dict[UUID, str]:
     return {key: conf.name for key, conf in configs.items()} | {NONE_ID: "None"}
 
 
-def get_jinja_schedules(schedules: Schedules) -> Schedules:
-    return Schedules(
+def get_jinja_schedules(schedules: WeekSchedule) -> WeekSchedule:
+    return WeekSchedule(
         *[
-            Schedule(x.configId) if x is not None else Schedule(NONE_ID)
+            ConfigChoice(x.configId) if x is not None else ConfigChoice(NONE_ID)
             for x in schedules
         ]
     )
 
 
 def handle_schedules_post():
-    configs, _ = loadStore()
+    current_store = loadStore()
     results = [
         request.form.get("mon"),
         request.form.get("tues"),
@@ -90,15 +95,20 @@ def handle_schedules_post():
     if None in results:
         abort(400)
     else:
-        new_schedules = Schedules(
+        new_schedules = WeekSchedule(
             *[
-                Schedule(UUID(result))
+                ConfigChoice(UUID(result))
                 if result != str(NONE_ID) and result is not None
                 else None
                 for result in results
             ]
         )
-        dumpStore(configs=configs, schedules=new_schedules)
+        dumpStore(
+            configs=current_store.configs,
+            defaultSchedule=new_schedules,
+            overrides=current_store.overrides,
+            active=current_store.active,
+        )
     return redirect("/schedules")
 
 
