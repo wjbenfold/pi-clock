@@ -1,4 +1,6 @@
 alarm_time.conf
+running.flg
+exit.flg
 
 # Python
 __pycache__/
