@@ -1,11 +1,16 @@
 import datetime
-import json
 from typing import Dict, List
-from uuid import UUID, uuid4
-from flask import abort, Flask, render_template, redirect, url_for, request
+from uuid import UUID
+from flask import abort, Flask, render_template, redirect, request
 
-from interface.handle_disk import dumpStore, loadStore
-from interface.repository import getConfigs, getCurrentTruths, setOverrides
+from interface.handle_disk import loadStore
+from interface.repository import (
+    addConfig,
+    getConfigs,
+    getCurrentTruths,
+    setOverrides,
+    updateDefaultSchedule,
+)
 from local_types import (
     Config,
     Configs,
@@ -42,25 +47,22 @@ def post_configs():
 
 
 def handle_configs_get():
-    configs = loadStore().configs
+    configs = getConfigs()
     return render_template("configs.html", configs=configs)
 
 
 def handle_configs_post():
-    current_store = loadStore()
     name = request.form.get("name")
     hours = request.form.get("hours")
     minutes = request.form.get("minutes")
     if name == None or hours == None or minutes == None:
         abort(400)
-    new_config = Config(name, int(hours), int(minutes))
-    current_store.configs[uuid4()] = new_config
-    dumpStore(
-        configs=current_store.configs,
-        defaultSchedule=current_store.defaultSchedule,
-        overrides=current_store.overrides,
-        active=current_store.active,
-    )
+    try:
+        num_hours = int(hours)
+        num_minutes = int(minutes)
+    except ValueError:
+        abort(400)
+    addConfig(Config(name, num_hours, num_minutes))
     return redirect("/configs")
 
 
@@ -97,7 +99,6 @@ def get_jinja_schedules(schedules: WeekSchedule) -> WeekSchedule:
 
 
 def handle_schedules_post():
-    current_store = loadStore()
     results = [
         request.form.get("mon"),
         request.form.get("tues"),
@@ -110,19 +111,15 @@ def handle_schedules_post():
     if None in results:
         abort(400)
     else:
-        new_schedules = WeekSchedule(
-            *[
-                ConfigChoice(UUID(result))
-                if result != str(NONE_ID) and result is not None
-                else None
-                for result in results
-            ]
-        )
-        dumpStore(
-            configs=current_store.configs,
-            defaultSchedule=new_schedules,
-            overrides=current_store.overrides,
-            active=current_store.active,
+        updateDefaultSchedule(
+            WeekSchedule(
+                *[
+                    ConfigChoice(UUID(result))
+                    if result != str(NONE_ID) and result is not None
+                    else None
+                    for result in results
+                ]
+            )
         )
     return redirect("/schedules")
 

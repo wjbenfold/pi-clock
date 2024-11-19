@@ -4,10 +4,12 @@ import threading
 from time import sleep
 
 from backend import backend
-from frontend import frontend
+from visual_frontend import frontend as visual_frontend
+from text_frontend import frontend as text_frontend
 from interface import bootstrap_config
 
 ignore_running = False
+visual_frontend = False
 
 if len(sys.argv) > 1:
     match sys.argv[1]:
@@ -35,7 +37,10 @@ else:
     sys.exit(-1)
 
 threading.Thread(target=backend.main, daemon=True).start()
-threading.Thread(target=frontend.main, daemon=True).start()
+if visual_frontend:
+    threading.Thread(target=visual_frontend.main, daemon=True).start()
+else:
+    threading.Thread(target=text_frontend.main, daemon=True).start()
 
 while not exit_flag.is_file():
     sleep(1)
