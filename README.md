@@ -15,7 +15,7 @@ Arguments
 
 ### Dependencies
 
-* `flask`
+* `flask` (for visual frontend)
 
 ## Features
 
@@ -25,6 +25,7 @@ Arguments
 * `exit.flg` will stop the service
 * Local http server to show alarm time
 * Alarm time changing from UI (make new configs, choose config used by schedule)
+* Alternative text frontend
 
 ## To do
 
