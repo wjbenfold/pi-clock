@@ -4,6 +4,7 @@ import threading
 from time import sleep
 
 from backend import backend
+from backend.music import shoop
 from visual_frontend import frontend as visual_frontend
 from text_frontend import frontend as text_frontend
 from interface import bootstrap_config
@@ -18,6 +19,9 @@ if len(sys.argv) > 1:
             sys.exit(0)
         case "--ignore-running":
             ignore_running = True
+        case "--test-music":
+            shoop()
+            sys.exit(0)
         case _:
             print("Invalid option")
             sys.exit(-1)
