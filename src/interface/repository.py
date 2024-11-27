@@ -1,6 +1,6 @@
 import datetime
 from typing import List, Tuple
-from uuid import uuid4
+from uuid import UUID, uuid4
 from interface.handle_disk import dumpStore, loadStore
 from local_types import (
     Config,
@@ -35,6 +35,17 @@ def getCurrentTruth(day: datetime.date) -> Tuple[OptionalConfigChoice, bool]:
 def addConfig(new_config: Config) -> None:
     current_store = loadStore()
     current_store.configs[uuid4()] = new_config
+    dumpStore(
+        configs=current_store.configs,
+        defaultSchedule=current_store.defaultSchedule,
+        overrides=current_store.overrides,
+        active=current_store.active,
+    )
+
+
+def removeConfig(config_id: UUID) -> None:
+    current_store = loadStore()
+    current_store.configs.pop(config_id)
     dumpStore(
         configs=current_store.configs,
         defaultSchedule=current_store.defaultSchedule,

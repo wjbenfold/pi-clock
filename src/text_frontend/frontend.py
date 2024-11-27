@@ -7,6 +7,7 @@ from interface.repository import (
     addConfig,
     getConfigs,
     getCurrentTruths,
+    removeConfig,
     setOverrides,
     updateDefaultSchedule,
 )
@@ -39,6 +40,12 @@ def parse_command(text: str):
             hours = pieces[2]
             mins = pieces[3]
             addConfig(Config(name, int(hours), int(mins)))
+        elif text.startswith("rm"):
+            # rm-A
+            pieces = text.split("-")
+            assert len(pieces) == 2
+            letter = pieces[1]
+            removeConfig(labToConf[letter])
         elif text.startswith("sc"):
             # sc-AAAAA**
             pieces = text.split("-")
@@ -180,7 +187,7 @@ def render_options() -> List[str]:
         ":",
         [
             "New config: nc-New Config-7-30",
-            "Set week schedule: sc-AAAAA**",
+            "Remove config: rm-A" "Set week schedule: sc-AAAAA**",
             "Override day: ov-mon-A",
             "Clear override: ov-mon-",
             "Set active: ov-off",

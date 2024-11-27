@@ -17,6 +17,10 @@ Arguments
 
 * `flask` (for visual frontend)
 
+### Configuration
+
+* Set `consoleblank=60` in `/boot/firmware/cmdline.txt` to have the screen blank after 60s of inactivity
+
 ## Features
 
 * Play music at the alarm time
@@ -35,5 +39,4 @@ Arguments
 * Or
     * Local trigger to set alarm (e.g. beep on PIR trigger)
 * Remote switch to set/cancel alarm
-* Screen only turns on when needed / turns off when not needed
 * Remote switch can trigger seeing the time briefly
