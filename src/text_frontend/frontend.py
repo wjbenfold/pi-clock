@@ -94,8 +94,8 @@ def parse_command(text: str):
         else:
             raise ValueError
 
-    except (ValueError, AssertionError):
-        return f"Invalid input: {text}"
+    except (ValueError, AssertionError) as e:
+        return f"Invalid input: {text}, {e}"
     return ""
 
 
