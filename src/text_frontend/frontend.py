@@ -187,7 +187,8 @@ def render_options() -> List[str]:
         ":",
         [
             "New config: nc-New Config-7-30",
-            "Remove config: rm-A" "Set week schedule: sc-AAAAA**",
+            "Remove UNUSED config: rm-A",
+            "Set week schedule: sc-AAAAA**",
             "Override day: ov-mon-A",
             "Clear override: ov-mon-",
             "Set active: ov-off",
