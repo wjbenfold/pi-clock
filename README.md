@@ -33,6 +33,7 @@ Arguments
 
 ## To do
 
+* Delete historic overrides automatically
 * Either
     * Notify user of alarm time
     * Remotely unset the alarm

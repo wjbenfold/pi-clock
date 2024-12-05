@@ -1,5 +1,6 @@
 import datetime
 import os
+from pathlib import Path
 from typing import Dict, List, Tuple
 from uuid import UUID
 from interface.handle_disk import loadStore
@@ -29,8 +30,10 @@ def labelsToConfigs(configs: Configs) -> Dict[str, UUID]:
     return {chr(65 + ind): uuid for ind, uuid in enumerate(sorted_uuids)}
 
 
-def parse_command(text: str):
+def parse_command(text: str) -> str:
     try:
+        if text == "":
+            return ""
         labToConf = labelsToConfigs(getConfigs())
         if text.startswith("nc"):
             # nc-New Config-7-30
@@ -223,4 +226,8 @@ def main():
     err = ""
     while 1:
         print(render_screen(err))
-        err = parse_command(input())
+        try:
+            err = parse_command(input())
+        except KeyboardInterrupt:
+            Path("exit.flg").touch()
+            break

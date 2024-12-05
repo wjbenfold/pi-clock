@@ -22,6 +22,8 @@ def makeJson(
     overrides: DateSchedule,
     active: bool,
 ) -> JsonStore:
+    today = date.today()
+    future_overrides = {key: val for key, val in overrides.items() if key >= today}
     jsonObject: JsonStore = {
         "configs": {
             str(key): {"name": val.name, "hour": val.hour, "minute": val.minute}
@@ -35,7 +37,7 @@ def makeJson(
             str(date.toordinal()): str(schedule.configId)
             if schedule is not None
             else None
-            for date, schedule in overrides.items()
+            for date, schedule in future_overrides.items()
         },
         "active": active,
     }
